@@ -52,8 +52,8 @@ class LoadImage:
             },
         }
 
-    RETURN_TYPES = ("IMAGE", "MASK")
-    RETURN_NAMES = ("image", "mask")
+    RETURN_TYPES = ("IMAGE", "MASK","STRING")
+    RETURN_NAMES = ("image", "mask","filename")
     FUNCTION = "load_image"
     CATEGORY = 'ComfyUI-Light-Tool/image/LoadImage'
     DESCRIPTION = "Load image"
@@ -61,6 +61,9 @@ class LoadImage:
     @staticmethod
     def load_image(image, keep_alpha_channel):
         image_path = folder_paths.get_annotated_filepath(image)
+
+        # 增加一个图片文件名输出点
+        image_name, image_format = os.path.splitext(os.path.basename(image_path))
 
         img = node_helpers.pillow(Image.open, image_path)
 
@@ -105,7 +108,7 @@ class LoadImage:
         else:
             output_image = output_images[0]
             output_mask = output_masks[0]
-        return output_image, output_mask
+        return output_image, output_mask,image_name
 
     @classmethod
     def IS_CHANGED(cls, image, keep_alpha_channel):
