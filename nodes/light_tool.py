@@ -1012,6 +1012,9 @@ class ShowAnything:
             """Convert various types to readable string format"""
             if isinstance(value, str):
                 return value
+            
+            if isinstance(value, (int, float, bool)):
+                return str(value)
 
             if isinstance(value, (list, tuple, dict)):
                 try:
@@ -1019,6 +1022,16 @@ class ShowAnything:
                 except Exception as e:
                     print(e)
                     return str(value)
+            if value is not None:
+                try:
+                    value = json.dumps(value)
+                except Exception:
+                    try:
+                        return str(value)
+                    except Exception as e:
+                        print(e)
+                        return str(value)
+            
 
         output_text = format_value(anything)
         if isinstance(anything, np.bool_):
